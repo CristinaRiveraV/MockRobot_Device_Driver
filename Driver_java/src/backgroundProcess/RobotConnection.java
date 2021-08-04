@@ -90,7 +90,7 @@ public class RobotConnection {
 		output_stream = socket.getOutputStream();
 		InputStream in= socket.getInputStream();
 		input_stream_reader = new BufferedReader(new InputStreamReader(in)); //Reads the whole message as a string
-		
+		connected = true;
 	}
 	
 	/**
@@ -195,6 +195,14 @@ public class RobotConnection {
 	 * */
 	public boolean get_operation_in_progress() {
 		return this.operation_in_progress;
+	}
+	/**
+	 * Access to operation_in_progress boolean
+	 * 
+	 * use to activate after sending a message
+	 * */
+	public void set_operation_in_progress(boolean b) {
+		this.operation_in_progress = b;
 	}
 	/**
 	 * Access to empty_hand boolean
