@@ -1,6 +1,9 @@
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
@@ -52,7 +55,7 @@ class ExecutingOperations {
 	}
 
 	@Test
-	final void testTest_pick() {
+	final void testTest_pick() throws UnknownHostException, ParametersDontMatch, IOException {
 	
 		 OperationsExecutor tester = new OperationsExecutor();
 		 
@@ -82,6 +85,9 @@ class ExecutingOperations {
 
 	/**
 	 * Test method for {@link backgroundProcess.OperationsExecutor#test_place(java.lang.String[], int[])}.
+	 * @throws IOException 
+	 * @throws ParametersDontMatch 
+	 * @throws UnknownHostException 
 	 *
 	 * 
 	 * @test parameter name incorrect
@@ -90,7 +96,7 @@ class ExecutingOperations {
 	 * @test succesfully send message
 	 */
 	@Test
-	final void testTest_place() {
+	final void testTest_place() throws UnknownHostException, ParametersDontMatch, IOException {
 		OperationsExecutor tester = new OperationsExecutor();
 		
 		tester.test_pick(new String[]{"Source Location"}, new int[] {11}); //The MockRobot must be holding something
@@ -120,6 +126,9 @@ class ExecutingOperations {
 
 	/**
 	 * Test method for {@link backgroundProcess.OperationsExecutor#test_transfer(java.lang.String[], int[])}.
+	 * @throws IOException 
+	 * @throws ParametersDontMatch 
+	 * @throws UnknownHostException 
 	 *
 	 * @test parameter name incorrect
 	 * @test more than 3 parameter name
@@ -129,7 +138,7 @@ class ExecutingOperations {
 	 * @test succesfully send message
 	 */
 	@Test
-	final void testTest_transfer() {
+	final void testTest_transfer() throws UnknownHostException, ParametersDontMatch, IOException {
 		OperationsExecutor tester = new OperationsExecutor();
 		 
 		//test parameter name incorrect:
