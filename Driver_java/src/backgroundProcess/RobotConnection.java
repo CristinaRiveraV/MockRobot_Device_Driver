@@ -133,17 +133,20 @@ public class RobotConnection {
 		}else return true;
 	}
 	/**
-	 * Access to operation_in_progress booelan
+	 * Access to operation_in_progress boolean
+	 * 
+	 * @return true when there is an operation in progress
+	 * @return false the system is free
 	 * */
 	public boolean get_operation_in_progress() {
 		return this.operation_in_progress;
 	}
 	/**
-	 * Access to empty_hand booelan
+	 * Access to empty_hand boolean
 	 * @return true when the hand is empty
 	 * @return false when the hand is holding an item
 	 * 
-	 * It's assumet the hand is empty to begin with
+	 * It's assumes the hand is empty to begin with
 	 * */
 	public boolean get_empty_hand() {
 		return this.operation_in_progress;
