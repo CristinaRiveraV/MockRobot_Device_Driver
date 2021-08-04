@@ -7,6 +7,9 @@ import java.net.*;
  * using Singleton pattern, 
  * creates a connection (TCP/IP) to the robot that remains open until the user clicks "Abort" in the UI
  *
+ *
+ * Used the following example as a guide:
+ * https://www.codejava.net/java-se/networking/java-socket-client-examples-tcp-ip
  * */
 public class RobotConnection {
 
