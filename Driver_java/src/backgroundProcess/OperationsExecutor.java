@@ -20,47 +20,42 @@ public class OperationsExecutor {
 		}
 		/**@return formated string 
 		 * */
-		public String toString() {
+		@Override public String toString() {
 			return name + "%" + value;
 		}
 	}
 	
 	private enum OperationName {pick, place, transfer	}
 	private enum ParameterName{ Sourcelocation, DestinationLocation }
-	private Queue<Operation> queue;
+	
 	private String process_status;
 	private int process_in_progress_id; 
-	private boolean empty_hand = true; //The robot's hand is assumed to be empty at the begining
-	private boolean operation_in_progress = false; //when the class is initialized, no function has been called
-	
+
 	
 	/**
 	 * Will create a new executor
-	 * 
+	 * Create this class at the beginning and re-use every time the button is called
 	 * */
 	public void OperationExecutor() {}
 	/**
-	 * Returns a string saying the status of the process in progress.
+	 * Method used by "transfer" 
 	 * 
-	 * @return "In Progress"
-	 * @return "Finished Successfully"
-	 * @return "Terminated With Error"
-	 * 	 * */
-	private String checkStatus() {
-		return RobotConnection.getInstance().sendMessage("status%"+this.process_in_progress_id);
-	}
-	
-	/**
-	 * Adds an operation to the queue. 
-	 * The operations will be called in FIFO order.
+	 * Infinite loop that breaks when there is no operation in progress
+	 * 
+	 * @return true when system is free to execute a new command
 	 * */
-	private void addItemToQueue(Operation o) {
-		queue.add(o);
+	private boolean checkStatus() {
+		while(true) {
+			if(!RobotConnection.getInstance().get_operation_in_progress()) return true; 
+		}
 	}
 	
+	
 	/**
-	 * Adds operation to the queue, and it will happen as soon as any other operations have finished
-	 * The parameters are the inputs by the user.
+	 * Will do all checks to make sure the text is correct.
+	 * Send a message to the robot and returns an empty string.
+	 * 
+	 * Robot will continue to run the process until it is finished.
 	 * 
 	 * @param operation "pick", "place" or "transfer"
 	 * @param parameterNames[] "SourceLocation" or "DestinationLocation"
@@ -70,53 +65,8 @@ public class OperationsExecutor {
 	public String execute(String operation, String[]parameterNames, int[]parameterValues) {
 		return "";
 	}
-	/**
-	 * Checks if the string coincides with a real operation
-	 * @return operationName as a string 
-	 * */
-	private String checkOperation(String operation) {
-		
-	} 
-	/**
-	 * Checks the number of parameters according to the operation.
-	 * Checks that the parameter name coincides with one of the pre-existing ones
-	 * 
-	 * @param string to be checked
-	 * @param int possition within the array (to be used when creaing a "pick" or "place" for transfering 
-	 * 
-	 * @return int possition in the array if it was an existing one
-	 * @exception ParameterNameUnexistant
-	 * */
-	private int checkParameter(String parameter_name, int array_position) {
-		return array_position;
-	}
 	
-	/**
-	 * @param int for the position //to be used with Parameter position
-	 * @param values array, to check for the value at position specified
-	 * 
-	 * @return int value for creating a new operation
-	 * 
-	 * */
-	private int getValue(int position, int[] values_array) {}
-	/**
-	 * creates a "pick" or "place" operation
-	 * 
-	 * if the operation is "transfer" it can be used to create 2 separate operations
-	 * 
-	 * @param Name is a sting that has already been confirmed 
-	 * @param value already chosen according to parameter name
-	 * 
-	 * @return a queue with 1 or 2 items, depending on the operation
-	 * 
-	 * pick will return a pick
-	 * place will return a place 
-	 * */
-	private Operation createOperation(String name, int value){
-		
-		return new Operation(name, value);
 	
-	}
 	
 	/**
 	 * Checks ig there is any operation in progress.
@@ -126,7 +76,50 @@ public class OperationsExecutor {
 	 * 
 	 * @return String when the operations were successfull
 	 * */
-	private String sendOperationMessage() {
+	private String sendOperationMessage(Operation o) {
+		return RobotConnection.getInstance().sendMessage(o.toString());
+	}
+	
+	/**
+	 * Checks all items are correct before creating a "pick" operation
+	 * 
+	 * @param paramNames = "SourceLocation" //ignore case
+	 * @param paramValues should have length of 1
+	 * 
+	 * @return an empty string when successful
+	 * @exception WrongParamNumber
+	 * @exception WrongParamName 
+	 * */
+	private String pick(String[] paramNames, int[] paramValues) {
+		return "";
+	}
+	
+	/**
+	 * Checks all items are correct before creating a "place" operation
+	 * 
+	 * @param paramNames = "DestinationLocation" //ignore case
+	 * @param paramValues should have length of 1
+	 * 
+	 * @return an empty string when successful
+	 * @exception WrongParamNumber
+	 * @exception WrongParamName 
+	 * */
+	private String place(String[] paramNames, int[] paramValues) {
+		return "";
+	}
+	/**
+	 * Checks all items are correct 
+	 * Calls a "pick" operation >> waits for it to finish >> calls for a "place" operation
+	 * 
+	 * @param paramNames = "DestinationLocation" and "SourceLocation" //ignore case
+	 * @param paramValues should have length of 2
+	 * 
+	 * @return an empty string when successful
+	 * 
+	 * @exception WrongParamNumber
+	 * @exception WrongParamName 
+	 * */
+	private String transfer(String[] paramNames, int[] paramValues) {
 		return "";
 	}
 }
