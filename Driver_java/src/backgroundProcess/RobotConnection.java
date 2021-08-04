@@ -1,5 +1,7 @@
 package backgroundProcess;
 
+import java.io.*;
+import java.net.*;
 
 /**
  * using Singleton pattern, 
@@ -11,17 +13,20 @@ public class RobotConnection {
 	private int ip_address = 1000;
 	private static RobotConnection instance;
 	private boolean connected = false;
-	//private outputStream
-	//private inputStream
+	private Socket socket;
+	private OutputStream output_stream;
+	private BufferedReader input_stream_reader; // reads the string returned by the MockRobot
 	private int process_id;
 	private boolean homed = false;
 	private boolean operation_in_progress = false;
 	private boolean empty_hand = true;
 	
-	/**
+	/**s
 	 * Calls method to start the connection
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 * */
-	private void RobotConnection(){
+	private RobotConnection() throws UnknownHostException, IOException{
 		establishConnection();
 	}
 	
@@ -30,8 +35,10 @@ public class RobotConnection {
 	 * Robot connection can send a message to initialize the robot and finish the connection 
 	 * 
 	 * @return the instance of RobotConnection created
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 * */
-	public static RobotConnection getInstance() {
+	public static RobotConnection getInstance() throws UnknownHostException, IOException {
 		if(instance == null) {
 			//Make sure that there is no more than one instance
 			synchronized (RobotConnection.class){
@@ -49,9 +56,18 @@ public class RobotConnection {
 	 * Method for: openConnection() 
 	 * 
 	 * @return an empty string if the process was successful, error message otherwise
-	 * @throws connection not possible
+	 * @throws connection not possible //unimplemented
 	 * */
 	public String startConnection() {
+		try {
+			RobotConnection.getInstance();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return "Unknow host name";
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "could not establish connection";
+		}
 		return "";
 	}
 	
@@ -60,19 +76,34 @@ public class RobotConnection {
 	 * 
 	 * When the connection is successful:
 	 * conneceted = true
+	 * It also creates an in and oou
+	 * @throws UnknownHostException 
+	 * 
+	 * @throw IOException
+	 * @throw errorCreatingConnection
 	 * */
-	private void establishConnection() {}
+	private void establishConnection() throws UnknownHostException, IOException {
+		socket = new Socket("MockRobot", ip_address);
+		output_stream = socket.getOutputStream();
+		InputStream in= socket.getInputStream();
+		input_stream_reader = new BufferedReader(new InputStreamReader(in)); //Reads the whole message as a string
+		
+	}
 	
 	/**
 	 * Sends a message to the robot.
 	 * It assumes the string is already in the correct format.
 	 * 
 	 * @return message that robot gave in response.
+	 * @throws IOException 
 	 * @exception the message was not understood
 	 * 
 	 * */
-	public String sendMessage(String formated_tring) {
-		return "";
+	public String sendMessage(String formated_string) throws IOException {
+		//First send item to Mock Robot and wait for return.
+		PrintWriter writer = new PrintWriter(output_stream );
+		writer.println(formated_string);
+		return input_stream_reader.readLine(); //Read the next line
 	}
 	
 	/**
@@ -81,9 +112,17 @@ public class RobotConnection {
 	 * Method for: abort() 
 	 * 
 	 * @return an empty string if the process was successful, error message otherwise
-	 * @throws connection could not be finished
+	 * @throws IOException - connection could not be terminated
 	 * */
 	public String stopConnection() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			connected = false;
+			return "Connection could not be terminated";
+		}
 		return "";
 	}
 	
