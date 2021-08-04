@@ -1,5 +1,11 @@
 package mainDriver;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+
+import backgroundProcess.OperationsExecutor;
+import backgroundProcess.RobotConnection;
+
 public class Driver {
 
 	/**
@@ -15,7 +21,7 @@ public class Driver {
 	 * (i.e. if the driver will be used for another robot and any of the parameters has to be changed.) 
 	 * 
 	 * */
-	
+	OperationsExecutor op_ex = new OperationsExecutor();
 	
 	/**
 	 * Creates an instance of RobotConnection.
@@ -26,7 +32,13 @@ public class Driver {
 	 * 
 	 * */
 	private String openConnection() {
-		return "";//RobotConnetion.getInstance().createConnection();
+		try {
+			return RobotConnection.getInstance().startConnection();
+		} catch (UnknownHostException e) {
+			return "Internal error. Unknown host.";
+		} catch (IOException e) {
+			return "Internal error. "+ e.toString();
+		}
 		
 	}
 	/**
@@ -37,7 +49,13 @@ public class Driver {
 	 * 
 	 * */
 	private String initialize() {
-		return "";
+		try {
+			return RobotConnection.getInstance().callHome();
+		} catch (UnknownHostException e) {
+			return "Internal error. "+ e.toString();
+		} catch (IOException e) {
+			return "Internal error. "+ e.toString();
+		}
 	}
 	
 	/**
@@ -47,8 +65,8 @@ public class Driver {
 	 * @throws exception describing why it was unsuccessful
 	 * 
 	 * */
-	private String executeOperation(String operation, String[] paramNames, String[] paramValues) {
-		return "";
+	private String executeOperation(String operation, String[] paramNames, int[] paramValues) {
+		return op_ex.execute(operation, paramNames, paramValues);
 	}
 	
 	/**
@@ -59,6 +77,12 @@ public class Driver {
 	 * 
 	 * */
 	private String abort() {
-		return "";
+		try {
+			return RobotConnection.getInstance().stopConnection();
+		} catch (UnknownHostException e) {
+			return "Internal error. "+ e.toString();
+		} catch (IOException e) {
+			return "Internal error. "+ e.toString();
+		}
 	}
 }
