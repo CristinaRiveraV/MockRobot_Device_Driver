@@ -148,10 +148,11 @@ public class RobotConnection {
 	 * Method for: initialize() 
 	 * 
 	 * @return an empty string if the process was successful, error message otherwise
+	 * @throws IOException 
 	 * @throws robor is already in position
 	 * @throws robot could no home
 	 * */
-	public String callHome() {
+	public String callHome() throws IOException {
 		return sendMessage("home");
 	}
 	/**return true when the process has finished.
@@ -159,8 +160,9 @@ public class RobotConnection {
 	 * Checks for the return messages of :
 	 * "Finished Successfully"
 	 * "Terminated With Error"
+	 * @throws IOException 
 	 * */
-	public boolean waitForProcessToEnd(int process_in_progress_id) {
+	public boolean waitForProcessToEnd(int process_in_progress_id) throws IOException {
 		if(operation_in_progress = true) {
 			while(true) {
 				String status = this.sendMessage("status%"+process_in_progress_id);
