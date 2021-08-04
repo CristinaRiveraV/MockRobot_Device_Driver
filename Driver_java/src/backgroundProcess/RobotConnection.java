@@ -78,8 +78,8 @@ public class RobotConnection {
 	 * Starts the connection as a client to the robot API
 	 * 
 	 * When the connection is successful:
-	 * conneceted = true
-	 * It also creates an in and oou
+	 * Connected = true
+	 * It also creates an in and out
 	 * @throws UnknownHostException 
 	 * 
 	 * @throw IOException
@@ -110,7 +110,7 @@ public class RobotConnection {
 	}
 	
 	/**
-	 * Stops the conncetion between the driver and the robot.
+	 * Stops the connection between the driver and the robot.
 	 * 
 	 * Method for: abort() 
 	 * 
@@ -123,9 +123,10 @@ public class RobotConnection {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			connected = false;
+			
 			return "Connection could not be terminated";
 		}
+		connected = false;
 		return "";
 	}
 	
@@ -153,28 +154,38 @@ public class RobotConnection {
 	 * @return an empty string if the process was successful, error message otherwise
 	 * @throws IOException 
 	 * @throws robor is already in position
-	 * @throws robot could no home
+	 * @throws robot could not home
 	 * */
 	public String callHome() throws IOException {
-		return sendMessage("home");
+		
+		String id = sendMessage("home");
+		if(Integer.valueOf(id) < 0) { //if the number returned is negative
+			return "Another process is in progress";
+		}
+		homed = true;
+		operation_in_progress = true;
+		process_id = Integer.valueOf(id);
+		return "";
 	}
-	/**return true when the process has finished.
+	/**return the ID for the operation that was queued 
+	 * use only with "pick" and "place"
 	 * 
-	 * Checks for the return messages of :
-	 * "Finished Successfully"
-	 * "Terminated With Error"
+	 * For use when "TRANSFER" is called
+	 * 
+	 * @return The process id for the new process occurring. 
+	 * 
 	 * @throws IOException 
 	 * */
-	public boolean waitForProcessToEnd(int process_in_progress_id) throws IOException {
-		if(operation_in_progress = true) {
+	public int waitForProcessToEnd(String process_to_send) throws IOException {
 			while(true) {
-				String status = this.sendMessage("status%"+process_in_progress_id);
-				if(status.equals("Finished Successfully") || status.equals("Terminated With Error")) {
-					this.operation_in_progress = false;
-					return true;
+				if(operation_in_progress = true) {
+				String id = this.sendMessage(process_to_send);
+				int id_int = Integer.valueOf(id);
+				if(id_int >= 0) { //the process finished and a new one started
+					return id_int;
 				}
 			}
-		}else return true;
+		}
 	}
 	/**
 	 * Access to operation_in_progress boolean
