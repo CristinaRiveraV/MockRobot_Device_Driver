@@ -122,4 +122,20 @@ public class OperationsExecutor {
 	private String transfer(String[] paramNames, int[] paramValues) {
 		return "";
 	}
+	/** For Testing private method "pick"
+	 * */
+	public String test_pick(String[] paramNames, int[] paramValues) {
+		return pick(paramNames, paramValues);
+	}
+	/** 
+	 * 	For Testing private method "place"	 
+	 *  */
+	public String test_place(String[] paramNames, int[] paramValues) {
+		return pick(paramNames, paramValues);
+	}
+	/** 	For Testing private method "transfer"
+	 * */
+	public String test_transfer(String[] paramNames, int[] paramValues) {
+		return pick(paramNames, paramValues);
+	}
 }
