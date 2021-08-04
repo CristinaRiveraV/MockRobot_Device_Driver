@@ -115,7 +115,11 @@ public class RobotConnection {
 	public String callHome() {
 		return sendMessage("home");
 	}
-	/**return true when the process has finished
+	/**return true when the process has finished.
+	 * 
+	 * Checks for the return messages of :
+	 * "Finished Successfully"
+	 * "Terminated With Error"
 	 * */
 	public boolean waitForProcessToEnd(int process_in_progress_id) {
 		if(operation_in_progress = true) {
@@ -128,4 +132,32 @@ public class RobotConnection {
 			}
 		}else return true;
 	}
+	/**
+	 * Access to operation_in_progress booelan
+	 * */
+	public boolean get_operation_in_progress() {
+		return this.operation_in_progress;
+	}
+	/**
+	 * Access to empty_hand booelan
+	 * @return true when the hand is empty
+	 * @return false when the hand is holding an item
+	 * 
+	 * It's assumet the hand is empty to begin with
+	 * */
+	public boolean get_empty_hand() {
+		return this.operation_in_progress;
+	}
+	
+	/**
+	 * USed to change the value of the empty hand 
+	 * (FOR methods "pick" and "place" to use)
+	 * 
+	 * switches values
+	 * */
+	public void change_empty_hand() {
+		if(empty_hand) empty_hand = false;
+		if(!empty_hand) empty_hand= true;
+	}
+	
 }
